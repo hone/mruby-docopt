@@ -18,7 +18,7 @@ mrb_value mrb_parse(mrb_state *mrb, mrb_value self)
   const char* argvv[argc];
   for(int i = 0; i < argc ; i++ ) {
     mrb_value element = mrb_ary_ref(mrb, argv, i);
-    argvv[i] = mrb_str_to_cstr(mrb, element); 
+    argvv[i] = mrb_str_to_cstr(mrb, element);
   }
   list c_options = parse(mrb_str_to_cstr(mrb, usage), argc, argvv);
   for(int i = 0 ; i < c_options.length ; i++){
@@ -42,10 +42,12 @@ mrb_value mrb_parse(mrb_state *mrb, mrb_value self)
         for(int i = 0; i < element.str_l.size; i++) {
           mrb_ary_push(mrb, value, mrb_str_new_cstr(mrb, element.str_l.strings[i]));
         }
+        free(element.str_l.strings);
         break;
     }
     mrb_hash_set(mrb, options, mrb_str_new_cstr(mrb, element.key), value);
   }
+  free(c_options.pairs);
   return options;
 }
 
