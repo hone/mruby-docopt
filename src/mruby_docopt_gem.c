@@ -33,7 +33,7 @@ mrb_value mrb_parse(mrb_state *mrb, mrb_value self)
         value = mrb_bool_value(element.b);
         break;
       case LONG:
-        value = mrb_fixnum_value(element.b);
+        value = mrb_fixnum_value(element.l);
         break;
       case EMPTY:
         value = mrb_nil_value();
