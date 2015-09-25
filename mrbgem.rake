@@ -23,7 +23,7 @@ MRuby::Gem::Specification.new('mruby-docopt') do |spec|
   if !File.exists?(docopt_dir)
     Dir.chdir(build_dir) do
       e = {}
-      run_command e, "git clone https://github.com/docopt/docopt.cpp #{docopt_dir}"
+      run_command e, "git clone https://github.com/toch/docopt.cpp --branch set-short-long-options #{docopt_dir}"
     end
   end
 
