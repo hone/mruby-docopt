@@ -37,6 +37,7 @@ mrb_value mrb_parse(mrb_state *mrb, mrb_value self)
         break;
       case EMPTY:
         value = mrb_nil_value();
+        break;
       case STRINGLIST:
         value = mrb_ary_new(mrb);
         for(int i = 0; i < element.str_l.size; i++) {
