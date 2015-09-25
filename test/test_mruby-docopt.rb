@@ -1,6 +1,5 @@
 class TestMrubyDocopt < MTest::Unit::TestCase
-  def test_help
-    usage = <<USAGE
+    USAGE = <<USAGE
 Naval Fate.
 
     Usage:
@@ -19,11 +18,55 @@ Naval Fate.
       --drifting    Drifting mine.
 USAGE
 
-    argv = ["naval_fate", "-h"]
+  def test_bool
+    argv = "naval_fate -h".split
 
-    result = Docopt.parse(usage, argv)
-    assert_true result["-h"]
-    assert_nil result["speed"]
+    options = Docopt.parse(USAGE, argv)
+    assert_true options["-h"]
+  end
+
+  def test_string
+    x    = "1"
+    y    = "2"
+    argv = "naval_fate ship shoot #{x} #{y}".split
+
+    options = Docopt.parse(USAGE, argv)
+    assert_true options["ship"]
+    assert_true options["shoot"]
+    assert_equal x, options["<x>"]
+    assert_equal y, options["<y>"]
+  end
+
+  def test_array_string
+    names = %w(enterprise mission)
+    argv  = "naval_fate ship new #{names.join(" ")}".split
+
+    options = Docopt.parse(USAGE, argv)
+    assert_true options["ship"]
+    assert_equal names, options["<name>"]
+  end
+
+  def test_nil
+    argv  = "naval_fate ship foo move 0 0".split
+
+    options = Docopt.parse(USAGE, argv)
+    assert_nil options["--speed"]
+  end
+
+  def test_complex
+    name  = "enterprise"
+    x     = "1"
+    y     = "2"
+    speed = "10"
+    argv  = "naval_fate ship #{name} move #{x} #{y} --speed=#{speed}".split
+
+    options = Docopt.parse(USAGE, argv)
+    assert_true options["ship"]
+    assert_true options["move"]
+    assert_equal [name], options["<name>"]
+    assert_equal x, options["<x>"]
+    assert_equal y, options["<y>"]
+    assert_equal speed, options["--speed"]
   end
 end
 
