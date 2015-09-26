@@ -1,56 +1,32 @@
 #include "docopt.h"
-#include "facade.h"
+
+#include "mruby.h"
+#include "mruby/array.h"
+#include "mruby/hash.h"
+#include "mruby/string.h"
 
 #include <iostream>
 #include <map>
 
-pair docopt_value_to_pair(std::string name, const docopt::value& value) {
+mrb_value docopt_value_to_mrb_value(const docopt::value& value, mrb_state *mrb) {
   if (value.isString()) {
-    pair res{
-        name.c_str(),
-        type_enum::STRING
-    };
-    res.str = value.asString().c_str();
-
-    return res;
+    return mrb_str_new_cstr(mrb, value.asString().c_str());
   } else if (value.isBool()) {
-    pair res{
-        name.c_str(),
-        type_enum::BOOL
-    };
-    res.b = value.asBool() ? 1 : 0;
-
-    return res;
+    return mrb_bool_value(value.asBool() ? 1 : 0);
   } else if (value.isLong()) {
-    pair res{
-        name.c_str(),
-        type_enum::LONG
-    };
-    res.l = value.asLong();
-
-    return res;
+    return mrb_fixnum_value(value.asLong());
   } else if (value.isStringList()) {
-    pair res{
-        name.c_str(),
-        type_enum::STRINGLIST
-    };
-    auto list = value.asStringList();
-    res.str_l.size = list.size();
-    res.str_l.strings = (const char**)malloc(list.size() * sizeof(char*));
-    for(int i = 0 ; i < list.size() ; i++) {
-      res.str_l.strings[i] = list[i].c_str();
+    mrb_value res = mrb_ary_new(mrb);
+    for(const auto& str: value.asStringList()){
+      mrb_ary_push(mrb, res, mrb_str_new_cstr(mrb, str.c_str()));
     }
     return res;
   }
-  pair res{
-    name.c_str(),
-    type_enum::EMPTY
-  };
-  res.b = 0;
-  return res;
+  return mrb_nil_value();
 }
 
-extern "C" list parse(char* usage, int argc, const char** argv) {
+extern "C" mrb_value parse(char* usage, int argc, const char** argv, mrb_state *mrb) {
+    mrb_value options = mrb_hash_new(mrb);
     std::map<std::string, docopt::value> args
         = docopt::docopt(
                 usage,
@@ -58,14 +34,14 @@ extern "C" list parse(char* usage, int argc, const char** argv) {
                 false
             );
 
-    list options;
-    options.pairs = (pair*)malloc(args.size() * sizeof(pair));
-    options.length = args.size();
-    int idx = 0;
     for(auto const& arg : args) {
-        options.pairs[idx] = 
-            docopt_value_to_pair(arg.first, arg.second);
-        idx++;
+        mrb_value value = docopt_value_to_mrb_value(arg.second, mrb);
+        mrb_hash_set(
+          mrb,
+          options,
+          mrb_str_new_cstr(mrb, arg.first.c_str()),
+          value
+        );
     }
     return options;
 }
