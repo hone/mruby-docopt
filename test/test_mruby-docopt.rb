@@ -9,21 +9,23 @@ Naval Fate.
       naval_fate mine (set|remove) <x> <y> [--moored | --drifting]
       naval_fate (-h | --help)
       naval_fate --version
+      naval_fate (-o | --option)
 
     Options:
       -h --help     Show this screen.
       --version     Show version.
       --speed=<kn>  Speed in knots [default: 10].
-      --acc=<kns>    Speed in knots per second.
+      --acc=<kns>   Speed in knots per second.
       --moored      Moored (anchored) mine.
       --drifting    Drifting mine.
+      -o --option   Test long and short option.
 USAGE
 
   def test_bool
     argv = "naval_fate -h".split
 
     options = Docopt.parse(USAGE, argv)
-    assert_true options["-h"]
+    assert_true options["--help"]
   end
 
   def test_string
@@ -39,12 +41,12 @@ USAGE
   end
 
   def test_short_and_long_options_are_set_when_provided
-    argv = "naval_fate -h".split
+    argv = "naval_fate -o".split
     options = Docopt.parse(USAGE, argv)
-    assert_true options["-h"] && options["--help"]
-    argv = "naval_fate --help".split
+    assert_true options["--option"]
+    argv = "naval_fate --option".split
     options = Docopt.parse(USAGE, argv)
-    assert_true options["-h"] && options["--help"]
+    assert_true options["--option"]
   end
 
   def test_array_string
