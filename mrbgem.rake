@@ -5,7 +5,6 @@ MRuby::Gem::Specification.new('mruby-docopt') do |spec|
   spec.license = 'MIT'
   spec.author  = 'Terence Lee and Christophe Philemotte'
   spec.summary = 'mrbgem of docopt used for option parsing. http://docopt.org/'
-  spec.add_dependency "mruby-mtest", core: "mruby-mtest"
 
   docopt_dir = "#{build_dir}/docopt"
 
