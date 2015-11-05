@@ -35,9 +35,16 @@ MRuby::Gem::Specification.new('mruby-docopt') do |spec|
         'LD' => "#{spec.build.linker.command} #{spec.build.linker.flags.join(' ')}",
         'AR' => spec.build.archiver.command
       }
+      if build.kind_of?(MRuby::CrossBuild) && build.host_target && build.build_target
+        if build.host_target == "x86_64-w64-mingw32" || build.host_target == "i686-w64-mingw32"
+          run_command e, "sed -i '2iSET(CMAKE_SYSTEM_NAME Windows)' CMakeLists.txt"
+          run_command e, "sed -i '3iSET(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS \"\")' CMakeLists.txt"
+          run_command e, "sed -i '4iSET(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS \"\")' CMakeLists.txt"
+        end
+      end
       run_command e, %Q{cmake -G "Unix Makefiles"}
       if build.kind_of?(MRuby::CrossBuild) && build.host_target && build.build_target
-	if build.host_target == "x86_64-apple-darwin14" || build.host_target == "i386-apple-darwin14"
+        if build.host_target == "x86_64-apple-darwin14" || build.host_target == "i386-apple-darwin14"
           run_command e, "sed -i -e 's/-soname/-install_name/' CMakeFiles/docopt.dir/link.txt"
           run_command e, "sed -i -e 's/\\/usr\\/bin\\//\\/opt\\/osxcross\\/target\\/bin\\/x86_64-apple-darwin14-/' CMakeFiles/docopt_s.dir/link.txt"
         end
