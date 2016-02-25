@@ -27,6 +27,9 @@ mrb_value docopt_value_to_mrb_value(const docopt::value& value, mrb_state *mrb) 
 
 extern "C" mrb_value parse(char* usage, int argc, const char** argv, mrb_state *mrb) {
     mrb_value options = mrb_hash_new(mrb);
+
+    if (argc <= 0) return options;
+
     std::map<std::string, docopt::value> args
         = docopt::docopt(
                 usage,
