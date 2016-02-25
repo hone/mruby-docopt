@@ -21,6 +21,11 @@ Naval Fate.
       -o --option   Test long and short option.
 USAGE
 
+  # make sure doesn't core dump
+  def test_empty_argv
+    assert Docopt.parse(USAGE, [])
+  end
+
   def test_bool
     argv = "naval_fate -h".split
 
