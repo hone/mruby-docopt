@@ -7,4 +7,4 @@ dependencies:
     - sudo chmod +x /usr/local/bin/docker-compose
 test:
   override:
-    - rake 
+    - docker-compose run mtest
