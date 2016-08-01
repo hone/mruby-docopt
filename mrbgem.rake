@@ -49,7 +49,7 @@ MRuby::Gem::Specification.new('mruby-docopt') do |spec|
           run_command e, "sed -i -e 's/\\/usr\\/bin\\//\\/opt\\/osxcross\\/target\\/bin\\/x86_64-apple-darwin14-/' CMakeFiles/docopt_s.dir/link.txt"
         end
       end
-      run_command e, "make"
+      run_command e, "make docopt_s"
     end
   end
 
@@ -57,5 +57,5 @@ MRuby::Gem::Specification.new('mruby-docopt') do |spec|
   spec.cxx.include_paths << File.join(File.dirname(__FILE__), "include")
   spec.cxx.flags << "-std=c++11"
   spec.build.linker.library_paths << docopt_dir
-  spec.build.linker.flags_after_libraries << "-ldocopt_s"
+  spec.build.linker.flags_after_libraries << "-ldocopt"
 end
