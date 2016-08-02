@@ -27,7 +27,7 @@ MRuby::Gem::Specification.new('mruby-docopt') do |spec|
     end
   end
 
-  if !File.exists?("#{docopt_dir}/libdocopt_s.a")
+  if !File.exists?("#{docopt_dir}/libdocopt.a")
     Dir.chdir(docopt_dir) do
       e = {
         'CC' => "#{spec.build.cc.command} #{spec.build.cc.flags.join(' ')}",
