@@ -57,5 +57,5 @@ MRuby::Gem::Specification.new('mruby-docopt') do |spec|
   spec.cxx.include_paths << File.join(File.dirname(__FILE__), "include")
   spec.cxx.flags << "-std=c++11"
   spec.build.linker.library_paths << docopt_dir
-  spec.build.linker.flags_after_libraries << "-ldocopt"
+  spec.build.linker.flags_after_libraries << "-l:libdocopt.a"
 end
