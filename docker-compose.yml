@@ -2,6 +2,7 @@ compile: &defaults
   build: .
   volumes:
     - .:/home/mruby/code:rw
+    - ../mferuby/:/home/mruby/mferuby/:rw
   command: rake compile
 test:
   <<: *defaults

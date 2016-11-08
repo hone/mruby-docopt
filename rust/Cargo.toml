@@ -1,0 +1,12 @@
+[package]
+name = "mruby-rust-docopt"
+version = "0.1.0"
+authors = ["Terence Lee <hone02@gmail.com>"]
+
+[dependencies]
+mferuby = { git = "https://github.com/hone/mferuby.git" }
+docopt = "0.6"
+rustc-serialize = "0.3"
+
+[lib]
+crate-type = ["staticlib"]
