@@ -9,10 +9,10 @@ use std::ffi::CString;
 pub extern "C" fn argv_map_free(mrb: *mut sys::mrb_state, p: *mut c_void) {
 }
 
-let foo =    sys::mrb_data_type {
-        struct_name: cstr!("ArgvMap"),
-        dfree: argv_map_free as *mut c_void,
-    };
+// let foo = sys::mrb_data_type {
+//         struct_name: cstr!("ArgvMap"),
+//         dfree: argv_map_free as *mut c_void,
+//     };
 
 #[no_mangle]
 #[allow(unused_variables)]

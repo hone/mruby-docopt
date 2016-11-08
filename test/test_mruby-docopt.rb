@@ -29,8 +29,6 @@ USAGE
   def test_bool
     argv = "naval_fate --help".split
 
-    puts Docopt::Options
-
     options = Docopt.parse(USAGE, argv)
     assert_true options["--help"]
   end

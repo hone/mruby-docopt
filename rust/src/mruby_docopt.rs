@@ -1,9 +1,20 @@
 extern crate mferuby;
 extern crate docopt;
+extern crate libc;
 
 use std::mem;
 use mferuby::sys;
 use std::ffi::CString;
+
+#[no_mangle]
+extern "C" fn free_docopt_result(mrb: *mut sys::mrb_state, map: Box<docopt::ArgvMap>) {}
+
+lazy_static! {
+    static ref docopt_option_type: sys::mrb_data_type = sys::mrb_data_type {
+        dtype: cstr!("Options"),
+        free: unsafe { mem::transmute(free_docopt_result as *mut libc::c_void) }
+    };
+}
 
 #[no_mangle]
 #[allow(unused_variables)]
@@ -23,11 +34,20 @@ pub extern "C" fn parse(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys::
 
     let result = docopt::Docopt::new(rust_usage)
         .and_then(|d| d.help(false).argv(vec_args.into_iter()).parse());
+
+    println!("RESULT: {:?}", result);
+
     match result {
         Ok(args) => {
-            println!("{:?}", args);
+            let obj = unsafe {
+                let args = Box::new(args);
+                let obj = sys::mrb_data_object_alloc(mrb, mem::transmute(&this), mem::transmute(args), &docopt_option_type as &sys::mrb_data_type);
+                obj
+            };
+
+            println!("OBJ: {:?}", obj);
             unsafe { sys::mrb_str_new_cstr(mrb, cstr!("hello")) }
         },
-        Err(e) => unsafe { println!("{:?}", e); sys::nil() },
+        Err(e) => unsafe { println!("ERROR: {:?}", e); sys::nil() },
     }
 }

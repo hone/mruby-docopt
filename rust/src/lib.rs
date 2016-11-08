@@ -1,6 +1,9 @@
 #[macro_use]
 extern crate mferuby;
 
+#[macro_use]
+extern crate lazy_static;
+
 use mferuby::sys;
 use std::ffi::CString;
 
@@ -15,6 +18,7 @@ pub extern "C" fn mrb_mruby_docopt_gem_init(mrb: *mut sys::mrb_state) {
 
         let options_class = sys::mrb_define_class_under(mrb, docopt_mod, cstr!("Options"), sys::mrb_state_object_class(mrb));
         sys::MRB_SET_INSTANCE_TT(options_class, sys::mrb_vtype::MRB_TT_DATA);
+        sys::mrb_define_method(mrb, options_class, cstr!("initialize"), mruby_options::options_initialize as sys::mrb_func_t, sys::MRB_ARGS_REQ(0));
         sys::mrb_define_method(mrb, options_class, cstr!("[]"), mruby_options::access as sys::mrb_func_t, sys::MRB_ARGS_REQ(1));
     }
 }
@@ -28,7 +32,7 @@ pub extern "C" fn mrb_mruby_docopt_gem_final(mrb: *mut sys::mrb_state) {
 //    match args.find(key) {
 //        None => unsafe { nil() },
 //        Some(arg) => match arg {
-//            Value::Switch(bool) => 
+//            Value::Switch(bool) =>
 //        }
 //    }
 //}
