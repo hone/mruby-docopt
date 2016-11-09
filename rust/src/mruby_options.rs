@@ -19,9 +19,3 @@ pub extern "C" fn argv_map_free(mrb: *mut sys::mrb_state, p: *mut c_void) {
 pub extern "C" fn access(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys::mrb_value {
     unsafe { sys::nil() }
 }
-
-#[no_mangle]
-#[allow(unused_variables)]
-pub extern "C" fn options_initialize(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys::mrb_value {
-    this
-}

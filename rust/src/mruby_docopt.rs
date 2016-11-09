@@ -12,7 +12,7 @@ extern "C" fn free_docopt_result(mrb: *mut sys::mrb_state, map: Box<docopt::Argv
 lazy_static! {
     static ref docopt_option_type: sys::mrb_data_type = sys::mrb_data_type {
         dtype: cstr!("Options"),
-        free: unsafe { mem::transmute(free_docopt_result as *mut libc::c_void) }
+        dfree: unsafe { mem::transmute(free_docopt_result as *mut libc::c_void) }
     };
 }
 
