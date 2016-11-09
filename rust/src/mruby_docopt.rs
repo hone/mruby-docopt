@@ -19,6 +19,7 @@ lazy_static! {
 #[no_mangle]
 #[allow(unused_variables)]
 pub extern "C" fn parse(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys::mrb_value {
+    let mrb_obj = mferuby::Mrb::new(mrb);
     let mut usage: sys::mrb_value = unsafe { mem::uninitialized() };
     let mut argv: sys::mrb_value = unsafe { mem::uninitialized() };
     unsafe { sys::mrb_get_args(mrb, cstr!("SA"), &mut usage, &mut argv); }
@@ -39,11 +40,8 @@ pub extern "C" fn parse(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys::
 
     match result {
         Ok(args) => {
-            let obj = unsafe {
-                let args = Box::new(args);
-                let obj = sys::mrb_data_object_alloc(mrb, mem::transmute(&this), mem::transmute(args), &docopt_option_type as &sys::mrb_data_type);
-                obj
-            };
+            let args = Box::new(args);
+            let obj = mrb_obj.data_object_alloc::<docopt::ArgvMap>(this, args, &docopt_option_type);
 
             println!("OBJ: {:?}", obj);
             unsafe { sys::mrb_str_new_cstr(mrb, cstr!("hello")) }
