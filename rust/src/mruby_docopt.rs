@@ -36,15 +36,13 @@ pub extern "C" fn parse(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys::
     let result = docopt::Docopt::new(rust_usage)
         .and_then(|d| d.help(false).argv(vec_args.into_iter()).parse());
 
-    println!("RESULT: {:?}", result);
-
     match result {
         Ok(args) => {
             let args = Box::new(args);
-            let obj = mrb_obj.data_object_alloc::<docopt::ArgvMap>(this, args, &docopt_option_type);
-
-            println!("OBJ: {:?}", obj);
-            unsafe { sys::mrb_str_new_cstr(mrb, cstr!("hello")) }
+            let klass = unsafe { sys::mrb_class_get_under(mrb, sys::mrb_module_get(mrb, cstr!("Docopt")), cstr!("Options")) };
+            unsafe {
+                sys::mrb_obj_value(mrb_obj.data_object_alloc::<docopt::ArgvMap>(klass, args, &docopt_option_type))
+            }
         },
         Err(e) => unsafe { println!("ERROR: {:?}", e); sys::nil() },
     }
