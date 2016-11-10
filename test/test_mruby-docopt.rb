@@ -45,7 +45,6 @@ USAGE
     assert_equal y, options["<y>"]
   end
 
-=begin
   def test_short_and_long_options_are_set_when_provided
     argv = "naval_fate -o".split
     options = Docopt.parse(USAGE, argv)
@@ -93,7 +92,6 @@ USAGE
     assert_equal y, options["<y>"]
     assert_equal speed, options["--speed"]
   end
-=end
 end
 
 MTest::Unit.new.run

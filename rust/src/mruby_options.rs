@@ -44,17 +44,17 @@ pub extern "C" fn access(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys:
                 docopt::Value::Plain(None) => {
                     sys::nil()
                 }
-                //docopt::Value::List(vector) => {
-                 //   let mut array = sys::mrb_ary_new(mrb);
+                docopt::Value::List(ref vector) => {
+                    let array = sys::mrb_ary_new(mrb);
 
-                    //vector.each(|string| {
-                    //    sys::mrb_ary_push(mrb, &array, sys::mrb_str_new_cstr(cstr!(&string)));
-                    //})
+                    for string in vector {
+                        let cstring = sys::mrb_str_new_cstr(mrb, cstr!(&**string));
+                        sys::mrb_ary_push(mrb, array, cstring);
+                    }
 
-                //    array
-                //},
+                    array
+                }
                 docopt::Value::Counted(uint) => sys::fixnum(uint as c_int),
-                _ => sys::nil(),
             },
         }
     }
