@@ -33,7 +33,6 @@ USAGE
     assert_true options["--help"]
   end
 
-=begin
   def test_string
     x    = "1"
     y    = "2"
@@ -46,6 +45,7 @@ USAGE
     assert_equal y, options["<y>"]
   end
 
+=begin
   def test_short_and_long_options_are_set_when_provided
     argv = "naval_fate -o".split
     options = Docopt.parse(USAGE, argv)

@@ -5,6 +5,7 @@ use mferuby::sys;
 use mferuby::libc::c_void;
 use std::ffi::CString;
 use std::mem;
+use mferuby::libc::{c_int};
 
 lazy_static! {
     pub static ref docopt_option_type: sys::mrb_data_type = sys::mrb_data_type {
@@ -37,6 +38,22 @@ pub extern "C" fn access(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys:
                         sys::mrb_false()
                     }
                 },
+                docopt::Value::Plain(Some(ref string)) => {
+                    sys::mrb_str_new_cstr(mrb, cstr!(&**string))
+                },
+                docopt::Value::Plain(None) => {
+                    sys::nil()
+                }
+                //docopt::Value::List(vector) => {
+                 //   let mut array = sys::mrb_ary_new(mrb);
+
+                    //vector.each(|string| {
+                    //    sys::mrb_ary_push(mrb, &array, sys::mrb_str_new_cstr(cstr!(&string)));
+                    //})
+
+                //    array
+                //},
+                docopt::Value::Counted(uint) => sys::fixnum(uint as c_int),
                 _ => sys::nil(),
             },
         }
