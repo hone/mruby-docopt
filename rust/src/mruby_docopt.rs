@@ -1,20 +1,10 @@
 extern crate mferuby;
 extern crate docopt;
-extern crate libc;
 
 use std::mem;
 use mferuby::sys;
 use std::ffi::CString;
-
-#[no_mangle]
-extern "C" fn free_docopt_result(mrb: *mut sys::mrb_state, map: Box<docopt::ArgvMap>) {}
-
-lazy_static! {
-    static ref docopt_option_type: sys::mrb_data_type = sys::mrb_data_type {
-        dtype: cstr!("Options"),
-        dfree: unsafe { mem::transmute(free_docopt_result as *mut libc::c_void) }
-    };
-}
+use mruby_options::docopt_option_type;
 
 #[no_mangle]
 #[allow(unused_variables)]

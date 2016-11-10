@@ -26,12 +26,3 @@ pub extern "C" fn mrb_mruby_docopt_gem_init(mrb: *mut sys::mrb_state) {
 #[allow(unused_variables)]
 pub extern "C" fn mrb_mruby_docopt_gem_final(mrb: *mut sys::mrb_state) {
 }
-
-//fn access(key: String) -> mrb_value {
-//    match args.find(key) {
-//        None => unsafe { nil() },
-//        Some(arg) => match arg {
-//            Value::Switch(bool) =>
-//        }
-//    }
-//}
