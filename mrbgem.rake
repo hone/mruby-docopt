@@ -6,7 +6,8 @@ MRuby::Gem::Specification.new('mruby-docopt') do |spec|
   spec.author  = 'Terence Lee and Christophe Philemotte'
   spec.summary = 'mrbgem of docopt used for option parsing. http://docopt.org/'
   spec.add_dependency 'mruby-mtest',     mgem: 'mruby-mtest'
-  spec.add_dependency 'mferuby-runtime', path: '../../mferuby'
+  #spec.add_dependency 'mferuby-runtime', path: '../../mferuby'
+  spec.add_dependency 'mferuby-runtime', github: 'hone/mferuby', branch: 'wip'
 
   def run_command env, command
     STDOUT.sync = true
