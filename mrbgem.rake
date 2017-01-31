@@ -60,8 +60,8 @@ MRuby::Gem::Specification.new('mruby-docopt') do |spec|
     spec.objs << libfile("#{spec.build_dir}/debug/lib#{rust_lib_name}")
   end
 
-  Dir.chdir("../rust") do
-    puts Dir.pwd
+  rust_dir = File.join(File.dirname(File.realpath(__FILE__)), "rust")
+  Dir.chdir(rust_dir) do
     run_command e, cargo_command
   end
 end
