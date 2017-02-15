@@ -18,6 +18,7 @@ pub extern "C" fn parse(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys::
 
     let argc = unsafe { sys::RARRAY_LEN(argv) };
     let mut vec_args: Vec<String> = vec![];
+
     for i in 0..argc {
         let element = unsafe { sys::mrb_ary_ref(mrb, argv, i) };
         vec_args.push(mferuby::mruby_str_to_rust_string(element).unwrap());
@@ -34,6 +35,12 @@ pub extern "C" fn parse(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys::
                 sys::mrb_obj_value(mrb_obj.data_object_alloc::<docopt::ArgvMap>(klass, args, &docopt_option_type))
             }
         },
-        Err(e) => unsafe { println!("ERROR: {:?}", e); sys::nil() },
-    }
+        Err(error) => match error {
+			docopt::Error::WithProgramUsage(e, msg) => unsafe {
+			    println!("{:?}",msg);
+			    sys::nil()
+			},
+			e =>  unsafe { println!("ERROR: {:?}", e); sys::nil() },
+		    }
+	}
 }

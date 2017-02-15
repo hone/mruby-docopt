@@ -21,9 +21,35 @@ Naval Fate.
       -o --option   Test long and short option.
 USAGE
 
+    USAGE_WITHOUT_HELP = <<USAGE_WITHOUT_HELP
+Naval Fate.
+
+    Usage:
+      naval_fate ship new <name>...
+      naval_fate ship <name> move <x> <y> [--speed=<kn>] [--acc=<kns>]
+      naval_fate ship shoot <x> <y>
+      naval_fate mine (set|remove) <x> <y> [--moored | --drifting]
+      naval_fate --version
+      naval_fate (-o | --option)
+
+    Options:
+      --version     Show version.
+      --speed=<kn>  Speed in knots [default: 10].
+      --acc=<kns>   Speed in knots per second.
+      --moored      Moored (anchored) mine.
+      --drifting    Drifting mine.
+      -o --option   Test long and short option.
+USAGE_WITHOUT_HELP
+
+
   # make sure doesn't core dump
   def test_empty_argv
-    #assert Docopt.parse(USAGE, [])
+    assert_nil Docopt.parse(USAGE, [])
+  end
+
+  def test_help_with_usage_without_help
+    argv = "naval_fate --help".split
+    assert_nil Docopt.parse(USAGE_WITHOUT_HELP, argv)
   end
 
   def test_bool
