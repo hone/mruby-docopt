@@ -36,11 +36,14 @@ pub extern "C" fn parse(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys::
             }
         },
         Err(error) => match error {
-			docopt::Error::WithProgramUsage(e, msg) => unsafe {
-			    println!("{:?}",msg);
-			    sys::nil()
-			},
-			e =>  unsafe { println!("ERROR: {:?}", e); sys::nil() },
-		    }
-	}
+            docopt::Error::WithProgramUsage(e, msg) => {
+                println!("{:?}", msg);
+                unsafe { sys::nil() }
+            },
+            e => {
+                println!("ERROR: {:?}", e);
+                unsafe { sys::nil() }
+            },
+        }
+    }
 }
