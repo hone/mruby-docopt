@@ -44,12 +44,16 @@ USAGE_WITHOUT_HELP
 
   # make sure doesn't core dump
   def test_empty_argv
-    assert_nil Docopt.parse(USAGE, [])
+    assert_raise ArgumentError do
+      Docopt.parse(USAGE, [])
+    end
   end
 
   def test_help_with_usage_without_help
     argv = "naval_fate --help".split
-    assert_nil Docopt.parse(USAGE_WITHOUT_HELP, argv)
+    assert_raise ArgumentError do
+      Docopt.parse(USAGE_WITHOUT_HELP, argv)
+    end
   end
 
   def test_bool

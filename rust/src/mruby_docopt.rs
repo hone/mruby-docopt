@@ -38,7 +38,10 @@ pub extern "C" fn parse(mrb: *mut sys::mrb_state, this: sys::mrb_value) -> sys::
         Err(error) => match error {
             docopt::Error::WithProgramUsage(e, msg) => {
                 println!("{:?}", msg);
-                unsafe { sys::nil() }
+                unsafe {
+                    sys::mrb_raise(mrb, sys::E_ARGUMENT_ERROR(mrb), cstr!("msg"));
+                    sys::nil()
+                }
             },
             e => {
                 println!("ERROR: {:?}", e);
